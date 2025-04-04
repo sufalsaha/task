@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const creditOptions = [
   { credits: 1000, price: 25 },
@@ -20,26 +21,51 @@ const creditOptions = [
   { credits: 100000, price: 2000 },
 ];
 
-export default function CreditSelector() {
+export default function Page() {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const selectedOption = creditOptions[selectedIndex];
 
   const handleChange = (value: number[]) => {
     setSelectedIndex(value[0]);
   };
 
+  const handlePackageClick = (index: number) => {
+    setSelectedIndex(index);
+  };
+
   return (
-    <div className="w-full max-w-xl mx-auto p-4">
+    <div className="w-full max-w-[1000px] mx-auto p-4">
+      <h2 className="text-lg font-semibold mb-2">1. Choose a package</h2>
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        {creditOptions.map((option, index) => (
+          <button
+            key={index}
+            className={cn(
+              "border p-4 rounded-lg text-center transition-all",
+              selectedIndex === index
+                ? "bg-green-300 border-blue-500"
+                : "bg-white border-gray-300"
+            )}
+            onClick={() => handlePackageClick(index)}
+          >
+            <p className="font-bold">{option.credits.toLocaleString()}</p>
+            <p>Credits</p>
+          </button>
+        ))}
+      </div>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="bg-black text-white p-3 rounded-lg text-center mb-2 cursor-pointer">
               <p className="text-sm">
-                ${(selectedOption.price / selectedOption.credits).toFixed(4)}{" "}
+                $
+                {(
+                  creditOptions[selectedIndex].price /
+                  creditOptions[selectedIndex].credits
+                ).toFixed(4)}{" "}
                 per valid email found
               </p>
               <p className="text-lg font-bold">
-                {selectedOption.credits.toLocaleString()} credits
+                {creditOptions[selectedIndex].credits.toLocaleString()} credits
               </p>
             </div>
           </TooltipTrigger>

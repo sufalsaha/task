@@ -2,20 +2,35 @@
 
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
-// import Image from "next/image";
 
-// import { usePathname } from "next/navigation";
-// import { SliderDemo } from "./slider";
+// const creditsOptions = [1000, 5000, 10000, 20000, 30000, 40000, 50000, 100000];
 
-const creditsOptions = [1000, 5000, 10000, 20000, 30000, 40000, 50000, 100000];
+const creditOptions = [
+  { credits: 1000, price: 25 },
+  { credits: 5000, price: 123 },
+  { credits: 10000, price: 240 },
+  { credits: 20000, price: 470 },
+  { credits: 30000, price: 690 },
+  { credits: 40000, price: 900 },
+  { credits: 50000, price: 1100 },
+  { credits: 100000, price: 2000 },
+];
 
 export default function Home() {
-  const [selectedCredits, setSelectedCredits] = useState(creditsOptions[0]);
+  // const [selectedCredits, setSelectedCredits] = useState(creditsOptions[0]);
 
-  const pricePerEmail = 0.025;
-  const pricePerEmailm = selectedCredits * 0.025;
-  // const num = 100000 / 8;
-  // const nu = ((selectedCredits - 1000) / (100000 - 1000)) * 100;
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleChange = (value: number[]) => {
+    setSelectedIndex(value[0]);
+  };
+
+  const handlePackageClick = (index: number) => {
+    setSelectedIndex(index);
+  };
+
+  // const pricePerEmail = 0.025;
+  const pricePerEmailm = selectedIndex * 0.025;
 
   return (
     <div className="w-full flex justify-center items-center ">
@@ -23,19 +38,19 @@ export default function Home() {
         <div>
           <p className="mb-[20px] ">1. Choose a package</p>
           <div className="grid grid-cols-5 gap-4">
-            {creditsOptions.map((credits) => (
+            {creditOptions.map((credits, i) => (
               <button
-                key={credits}
-                onClick={() => setSelectedCredits(credits)}
+                key={i}
+                onClick={() => handlePackageClick(i)}
                 className={`w-[200px] flex flex-col justify-center items-center border py-3 rounded-2xl cursor-pointer
               ${
-                selectedCredits === credits
+                selectedIndex === i
                   ? "bg-[#a9ff62] border-blue-500"
                   : "bg-white border-gray-300"
               }
                hover:bg-[#a9ff62]`}
               >
-                <p> {credits.toLocaleString()} </p>
+                <p> {credits.credits.toLocaleString()} </p>
                 <p> Credits</p>
               </button>
             ))}
@@ -50,35 +65,58 @@ export default function Home() {
               <div className="flex flex-col items-center p-4 mt-30">
                 <div className="w-full mb-6 relative">
                   <Slider
+                    min={0}
+                    max={creditOptions.length - 1}
+                    step={1}
+                    value={[selectedIndex]}
+                    onValueChange={handleChange}
+                    className="mb-4"
+                  />
+
+                  {/* <Slider
                     defaultValue={[1000]}
                     min={1000}
                     max={100000}
                     step={1}
-                    onValueChange={(value) => setSelectedCredits(value[0])}
+                    // onValueChange={(value) => setSelectedCredits(value[0])}
                     value={[selectedCredits]}
-                  />
+                  /> */}
                   <div
                     className="absolute -top-18 -right-10 w-56 bg-black text-white text-sm px-3 py-1 rounded-lg transform "
                     style={{
                       left: `${
-                        ((selectedCredits - 1000) / (100000 - 1000)) * 100
+                        ((creditOptions[selectedIndex].credits - 1000) /
+                          (100000 - 1000)) *
+                        100
                       }%`,
                     }}
                   >
-                    ${pricePerEmail.toFixed(4)} per valid email found
+                    ${" "}
+                    {(
+                      creditOptions[selectedIndex].price /
+                      creditOptions[selectedIndex].credits
+                    ).toFixed(4)}{" "}
+                    per valid email found
                     <h2 className="text-xl font-semibold">
-                      {selectedCredits.toLocaleString()} credits
+                      {creditOptions[selectedIndex].credits.toLocaleString()}{" "}
+                      credits
                     </h2>
                   </div>
                   <div className="mt-2 flex justify-between ">
-                    <div>$25</div>
+                    {creditOptions.map((option, index) => (
+                      <span key={index} className="text-gray-600">
+                        ${option.price}
+                      </span>
+                    ))}
+
+                    {/* <div>$25</div>
                     <div>$123</div>
                     <div>$240</div>
                     <div>$470</div>
                     <div>$690</div>
                     <div>$900</div>
                     <div>$1100</div>
-                    <div>$2000</div>
+                    <div>$2000</div> */}
                   </div>
                 </div>
               </div>
