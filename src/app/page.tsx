@@ -30,7 +30,10 @@ export default function Home() {
   };
 
   // const pricePerEmail = 0.025;
-  const pricePerEmailm = selectedIndex * 0.025;
+  const pricePerEmailm =
+    (creditOptions[selectedIndex].price /
+      creditOptions[selectedIndex].credits) *
+    creditOptions[selectedIndex].credits;
 
   return (
     <div className="w-full flex justify-center items-center ">
